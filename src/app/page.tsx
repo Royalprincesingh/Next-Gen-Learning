@@ -1,10 +1,19 @@
+import { redirect } from 'next/navigation';
+import { createServerComponentClient } from '@supabase/auth-helpers-nextjs';
+import { cookies } from 'next/headers';
 import DashboardShell from '@/components/DashboardShell';
 import { fetchCourses } from '@/lib/supabase';
 
-// Force dynamic rendering to ensure DB requests are fetched live
 export const dynamic = 'force-dynamic';
 
 export default async function Page() {
+  const supabase = createServerComponentClient({ cookies });
+  const { data: { session } } = await supabase.auth.getSession();
+
+  if (!session) {
+    redirect('/auth');
+  }
+
   const { data, error, isFallback } = await fetchCourses();
 
   return (
