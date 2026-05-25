@@ -10,9 +10,9 @@ export async function middleware(request: NextRequest) {
   // For now, rely on route handlers and RSC checks for full auth verification
   const pathname = request.nextUrl.pathname;
 
-  // Protect admin and dashboard routes (basic check)
+  // Protect admin route and root page (basic check)
   if (
-    (pathname.startsWith('/dashboard') ||
+    (pathname === '/' ||
       pathname.startsWith('/admin')) &&
     request.cookies.get('sb-auth-token') === undefined
   ) {
@@ -21,7 +21,7 @@ export async function middleware(request: NextRequest) {
 
   // Redirect authenticated users away from auth page
   if (pathname === '/auth' && request.cookies.get('sb-auth-token')) {
-    return NextResponse.redirect(new URL('/dashboard', request.url));
+    return NextResponse.redirect(new URL('/', request.url));
   }
 
   return res;

@@ -47,7 +47,7 @@ export default function AuthForm() {
         
         if (signInError) throw signInError;
         setSuccess(true);
-        setTimeout(() => router.push('/dashboard'), 1500);
+        setTimeout(() => router.push('/'), 1500);
       }
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Authentication failed');

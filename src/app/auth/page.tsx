@@ -9,7 +9,7 @@ export default async function AuthPage() {
   const { data: { session } } = await supabase.auth.getSession();
 
   if (session) {
-    redirect('/dashboard');
+    redirect('/');
   }
 
   return (
