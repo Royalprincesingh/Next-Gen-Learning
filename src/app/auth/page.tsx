@@ -1,10 +1,11 @@
 import { redirect } from 'next/navigation';
-import { createServerComponentClient } from '@supabase/auth-helpers-nextjs';
 import { cookies } from 'next/headers';
 import AuthForm from '@/components/AuthForm';
+import { createClient } from '@/utils/supabase/server';
 
 export default async function AuthPage() {
-  const supabase = createServerComponentClient({ cookies });
+  const cookieStore = await cookies();
+  const supabase = createClient(cookieStore);
   const { data: { session } } = await supabase.auth.getSession();
 
   if (session) {

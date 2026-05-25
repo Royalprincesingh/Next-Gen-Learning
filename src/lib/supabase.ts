@@ -2,7 +2,7 @@ import { createClient } from '@supabase/supabase-js';
 import { Course } from './types';
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
-const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY;
 
 export const MOCK_COURSES: Course[] = [
   {
@@ -39,7 +39,7 @@ export async function fetchCourses(): Promise<{ data: Course[]; error: string | 
   // Simulate network delay to demonstrate the elegant skeleton loading animations
   await new Promise((resolve) => setTimeout(resolve, 1500));
 
-  if (!supabaseUrl || !supabaseAnonKey) {
+  if (!supabaseUrl || !supabaseKey) {
     return {
       data: MOCK_COURSES,
       error: 'Supabase URL/Key environment variables are missing.',
@@ -48,7 +48,7 @@ export async function fetchCourses(): Promise<{ data: Course[]; error: string | 
   }
 
   try {
-    const supabase = createClient(supabaseUrl, supabaseAnonKey);
+    const supabase = createClient(supabaseUrl, supabaseKey);
     const { data, error } = await supabase
       .from('courses')
       .select('*')

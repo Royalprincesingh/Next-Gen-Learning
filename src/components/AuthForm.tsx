@@ -1,16 +1,16 @@
 'use client';
 
 import { useState } from 'react';
-import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
 import { useRouter } from 'next/navigation';
 import { motion } from 'framer-motion';
 import { Mail, Lock, Loader2, AlertCircle } from 'lucide-react';
+import { createClient } from '@/utils/supabase/client';
 
 type AuthMode = 'login' | 'signup';
 
 export default function AuthForm() {
   const router = useRouter();
-  const supabase = createClientComponentClient();
+  const supabase = createClient();
   
   const [mode, setMode] = useState<AuthMode>('login');
   const [email, setEmail] = useState('');

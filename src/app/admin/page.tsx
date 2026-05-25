@@ -1,15 +1,15 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
 import { useRouter } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Plus, Edit2, Trash2, X, CheckCircle, AlertCircle, Loader2 } from 'lucide-react';
 import { Course } from '@/lib/types';
+import { createClient } from '@/utils/supabase/client';
 
 export default function AdminPanel() {
   const router = useRouter();
-  const supabase = createClientComponentClient();
+  const supabase = createClient();
   
   const [courses, setCourses] = useState<Course[]>([]);
   const [loading, setLoading] = useState(true);

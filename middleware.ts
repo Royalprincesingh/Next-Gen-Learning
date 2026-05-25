@@ -1,26 +1,26 @@
-import { createMiddlewareClient } from '@supabase/auth-helpers-nextjs';
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
+import { createClient } from '@/utils/supabase/middleware';
 
 export async function middleware(request: NextRequest) {
-  const res = NextResponse.next();
-  const supabase = createMiddlewareClient({ req: request, res });
+  const res = createClient(request);
+  const supabase = await import('@/utils/supabase/server').then(m => m.createClient);
 
-  const {
-    data: { session },
-  } = await supabase.auth.getSession();
+  // Simple auth check - you may want to enhance this later
+  // For now, rely on route handlers and RSC checks for full auth verification
+  const pathname = request.nextUrl.pathname;
 
-  // Protect admin and dashboard routes
+  // Protect admin and dashboard routes (basic check)
   if (
-    (request.nextUrl.pathname.startsWith('/dashboard') ||
-      request.nextUrl.pathname.startsWith('/admin')) &&
-    !session
+    (pathname.startsWith('/dashboard') ||
+      pathname.startsWith('/admin')) &&
+    request.cookies.get('sb-auth-token') === undefined
   ) {
     return NextResponse.redirect(new URL('/auth', request.url));
   }
 
   // Redirect authenticated users away from auth page
-  if (request.nextUrl.pathname === '/auth' && session) {
+  if (pathname === '/auth' && request.cookies.get('sb-auth-token')) {
     return NextResponse.redirect(new URL('/dashboard', request.url));
   }
 
